@@ -37,11 +37,11 @@ These insights empower stakeholders with key business metrics, enabling strategi
 
 ---
 
-##📃 License
+## 📃 License
 
 This project is licensed under the [MIT License) (LICENSE). You are free to use, modify, and share this project with proper attribution.
 
-##🤔 About Me
+## 🤔 About Me
 
 Hi there! I'm **huh**, also known as **huh**. I'm a Beginner on a mission to keep up with this advancing world and Trying to be skilled.
 **This is My First Project and First time Using Git Hub so don't Judge Me 😭** 
