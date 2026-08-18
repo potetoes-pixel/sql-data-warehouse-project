@@ -1,0 +1,148 @@
+/*
+===============================================================================
+Data Loading Script: Ingest Raw CSV Data into Bronze Layer
+===============================================================================
+Script Purpose:
+    This script truncates and loads raw source data files (CSV) into the 
+    corresponding Bronze staging tables using BULK INSERT.
+    
+    Load Strategy: Full Refresh (Truncate and Load)
+    Source Systems:
+        1. CRM Datasets (Customer Info, Product Info, Sales Details)
+        2. ERP Datasets (Customer Demographics, Customer Locations, Product Categories)
+===============================================================================
+*/
+
+-- =============================================================================
+-- 1. LOAD CRM SOURCE DATA
+-- =============================================================================
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.crm_cust_info
+-- Source: cust_info.csv
+-------------------------------------------------------------------------------
+
+-- Step 1: Empty the target staging table to prevent duplicate records
+TRUNCATE TABLE bronze.crm_cust_info;
+
+-- Step 2: Bulk load the CSV file into the target table
+BULK INSERT bronze.crm_cust_info
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+WITH (
+    FIRSTROW = 2,           -- Skip the header row
+    FIELDTERMINATOR = ',',  -- Comma-delimited file format
+    TABLOCK                 -- Minimizes transaction logging and speeds up bulk insert
+);
+
+-- Quality Verification (Uncomment to inspect and validate column alignment)
+-- SELECT TOP 10 * FROM bronze.crm_cust_info;
+-- SELECT COUNT(*) AS total_cust_records FROM bronze.crm_cust_info;
+
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.crm_prd_info
+-- Source: prd_info.csv
+-------------------------------------------------------------------------------
+-- Step 1: Empty the target staging table
+TRUNCATE TABLE bronze.crm_prd_info;
+
+-- Step 2: Bulk load the CSV file
+BULK INSERT bronze.crm_prd_info
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    TABLOCK
+);
+
+-- Quality Verification
+-- SELECT TOP 10 * FROM bronze.crm_prd_info;
+-- SELECT COUNT(*) AS total_prd_records FROM bronze.crm_prd_info;
+
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.crm_sales_details
+-- Source: sales_details.csv
+-------------------------------------------------------------------------------
+-- Step 1: Empty the target staging table
+TRUNCATE TABLE bronze.crm_sales_details;
+
+-- Step 2: Bulk load the CSV file
+BULK INSERT bronze.crm_sales_details
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    TABLOCK
+);
+
+-- Quality Verification
+-- SELECT TOP 10 * FROM bronze.crm_sales_details;
+-- SELECT COUNT(*) AS total_sales_records FROM bronze.crm_sales_details;
+
+
+-- =============================================================================
+-- 2. LOAD ERP SOURCE DATA
+-- =============================================================================
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.erp_cust_az12
+-- Source: CUST_AZ12.csv (Customer Birthdates & Gender)
+-------------------------------------------------------------------------------
+-- Step 1: Empty the target staging table
+TRUNCATE TABLE bronze.erp_cust_az12;
+
+-- Step 2: Bulk load the CSV file
+BULK INSERT bronze.erp_cust_az12
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    TABLOCK
+);
+
+-- Quality Verification
+-- SELECT TOP 10 * FROM bronze.erp_cust_az12;
+-- SELECT COUNT(*) AS total_erp_cust_records FROM bronze.erp_cust_az12;
+
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.erp_loc_a101
+-- Source: LOC_A101.csv (Customer Geographic/Country Data)
+-------------------------------------------------------------------------------
+-- Step 1: Empty the target staging table
+TRUNCATE TABLE bronze.erp_loc_a101;
+
+-- Step 2: Bulk load the CSV file
+BULK INSERT bronze.erp_loc_a101
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    TABLOCK
+);
+
+-- Quality Verification
+-- SELECT TOP 10 * FROM bronze.erp_loc_a101;
+-- SELECT COUNT(*) AS total_loc_records FROM bronze.erp_loc_a101;
+
+
+-------------------------------------------------------------------------------
+-- Loading Table: bronze.erp_px_cat_g1v2
+-- Source: PX_CAT_G1V2.csv (Product Categories & Subcategories)
+-------------------------------------------------------------------------------
+-- Step 1: Empty the target staging table
+TRUNCATE TABLE bronze.erp_px_cat_g1v2;
+
+-- Step 2: Bulk load the CSV file
+BULK INSERT bronze.erp_px_cat_g1v2
+FROM 'C:\Users\HP\OneDrive\Desktop\SQL\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    TABLOCK
+);
+
+-- Quality Verification
+-- SELECT TOP 10 * FROM bronze.erp_px_cat_g1v2;
+-- SELECT COUNT(*) AS total_category_records FROM bronze.erp_px_cat_g1v2;
